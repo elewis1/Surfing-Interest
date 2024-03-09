@@ -49,7 +49,7 @@ get_credible_interval <- function(mu, sigma2,
   return(bound)
 }
 results_smoothed_dlm_interval <- get_credible_interval(mu=results_smoothed_dlm$s[,5], 
-                                                       sigma2=results_smoothed_dlm$D.S[,5])
+                                                       sigma2=results_smoothed_dlm$D.S[,5]^2)
 #plot data
 #s[,5] is expected value of matrix
 plot(surfAUS$x, surfAUS$`Surfing: (Australia)`, ylab = "level", 
@@ -66,14 +66,26 @@ plot(surfAUS$x, surfAUS$`Surfing: (Australia)`, ylab = "level",
 plot(x[1:(T+1)],results_filtered_dlm$m[,1],pch=20)
   abline(a=0, b=0, col='red')
   lines(x[1:(T+1)],results_smoothed_dlm$m[,1],col='blue',lwd=2)
-
+  
+  
+par(mfrow=c(2,2))
 #Trigonometric components and harmonics
 plot(x[1:(T)],results_smoothed_dlm$s[1:T, 1],pch=20)
   lines(x[1:(T)],results_smoothed_dlm$s[1:T, 1], col='blue', lwd=3)
   abline(a=0, b=0, col='red')
-  lines(x[1:(T)],results_smoothed_dlm$s[1:T, 2], col='yellow', lwd=3)
+
+plot(x[1:(T)],results_smoothed_dlm$s[1:T, 2],pch=20)
+  lines(x[1:(T)],results_smoothed_dlm$s[1:T, 2], col='blue', lwd=3)
+  abline(a=0, b=0, col='red')
+
+plot(x[1:(T)],results_smoothed_dlm$s[1:T, 3],pch=20)
   lines(x[1:(T)],results_smoothed_dlm$s[1:T, 3], col='blue', lwd=3)
-  lines(x[1:(T)],results_smoothed_dlm$s[1:T, 4], col='red', lwd=3)
+  abline(a=0, b=0, col='red')
+
+plot(x[1:(T)],results_smoothed_dlm$s[1:T, 4],pch=20)
+  lines(x[1:(T)],results_smoothed_dlm$s[1:T, 4], col='blue', lwd=3)
+  abline(a=0, b=0, col='red')
+
 
 #mean of model components
 plot(x[1:(T)],results_smoothed_dlm$s[1:T, 5],pch=20)

@@ -39,6 +39,9 @@ model <- model_seas + model_poly
 results_filtered_dlm=dlmFilter(surfAUS$`Surfing: (Australia)`[1:T],model)
 results_smoothed_dlm=dlmSmooth(results_filtered_dlm)
 
+resid <- residuals(results_filtered_dlm)
+plot.ts(resid$res)
+abline(h = 0)
 new=100
 #forecast last 2yrs
 results_forecast <- dlmForecast(model, nAhead=24, sampleNew=24)
@@ -52,7 +55,7 @@ get_credible_interval <- function(mu, sigma2,
   return(bound)
 }
 results_smoothed_dlm_interval <- get_credible_interval(mu=results_smoothed_dlm$s[,2], 
-                                                       sigma2=results_smoothed_dlm$D.S[,2])
+                                                       sigma2=results_smoothed_dlm$D.S[,2]^2)
 #Plot Data
 #s[,2] is expected value of matrix
 plot(surfAUS$x, surfAUS$`Surfing: (Australia)`, ylab = "level", 
@@ -86,6 +89,10 @@ plot(x[1:(T)],results_smoothed_dlm$s[1:T, 2],pch=20)
 #mean of model components
 plot(x[1:(T)],results_smoothed_dlm$s[1:T, 5],pch=20)
   lines(x[1:(T)],results_smoothed_dlm$s[1:T, 1], col='blue', lwd=3)
-  
 
-        
+library("COINr")
+smooth_ts <- ts(results_smoothed_dlm$s[1:T, 2], start=1)
+smooth_prcnt_chng <- (smooth_ts-smooth_ts[1])/smooth_ts[1]*100
+plot(smooth_prcnt_chng)
+  abline(a=0, b=0, col='red')         
+  
